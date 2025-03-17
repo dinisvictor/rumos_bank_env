@@ -1,0 +1,8 @@
+{
+    "model_name": "random_forest",
+    "model_version": "latest",
+    "tracking_base_url": "http://mlflow-tracking-server",
+    "tracking_port": 5000,
+    "service_base_url": "http://rumos-bank-lending-service",
+    "service_port": 5002
+}

@@ -1,0 +1,29 @@
+name: rumos_bank_env
+channels:
+  - conda-forge
+  - defaults
+  - https://repo.anaconda.com/pkgs/main
+  - https://repo.anaconda.com/pkgs/r
+dependencies:
+  - python=3.12
+  - fastapi
+  - uvicorn
+  - alembic
+  - sqlalchemy
+  - requests
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - mlflow
+  - flask
+  - gunicorn
+  - boto3
+  - pip
+  - pip:
+      - protobuf
+      - graphene
+      - graphql-core
+      - graphql-relay
+      - opentelemetry-api
+      - opentelemetry-sdk

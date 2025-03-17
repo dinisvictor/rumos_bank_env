@@ -1,0 +1,35 @@
+services:
+
+  mlflow-tracking-server:
+    image: ghcr.io/mlflow/mlflow
+    command: mlflow ui --port 5000 --host 0.0.0.0 --backend-store-uri ./mlruns --artifacts-destination ./mlruns
+    volumes:
+      - ./mlruns:/mlruns
+    container_name: mlflow-tracking
+    ports:
+      - 5000:5000
+
+  rumos-bank-lending-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.Service
+      tags:
+        - rumos-bank-lending-service:latest
+        - ghcr.io/dinisvictor/rumos_bank_service:latest
+    image: ghcr.io/dinisvictor/rumos_bank_service
+    container_name: rumos-bank-lending-service
+    ports:
+      - 5002:5002
+
+  # Caso haja uma UI, podemos adaptar este serviço. Se não for necessário, remover.
+  rumos-bank-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.UI
+      tags:
+        - rumos-bank-ui:latest
+        - ghcr.io/dinisvictor/rumos_bank_ui:latest
+    image: ghcr.io/dinisvictor/rumos_bank_ui
+    container_name: rumos-bank-ui
+    ports:
+      - 5003:5003

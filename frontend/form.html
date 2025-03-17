@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rumos Bank - Loan Default Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        form {
+            text-align: left;
+        }
+        label {
+            width: 50%;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 1.2em;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rumos Bank - Loan Default Predictor</h1>
+        <form id="predictLoanDefault">
+            <label for="Age">Age:</label>
+            <input type="number" id="Age" name="Age" required><br><br>
+
+            <label for="Income">Income (€):</label>
+            <input type="number" id="Income" name="Income" required><br><br>
+
+            <label for="LoanAmount">Loan Amount (€):</label>
+            <input type="number" id="LoanAmount" name="LoanAmount" required><br><br>
+
+            <label for="CreditScore">Credit Score:</label>
+            <input type="number" id="CreditScore" name="CreditScore" required><br><br>
+
+            <label for="LoanDuration">Loan Duration (months):</label>
+            <input type="number" id="LoanDuration" name="LoanDuration" required><br><br>
+
+            <input type="submit" value="Predict Default">
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+
+        // Preencher o formulário com valores padrão
+        document.addEventListener('DOMContentLoaded', function() {
+            const defaultValues = {
+                "Age": 35,
+                "Income": 3000,
+                "LoanAmount": 15000,
+                "CreditScore": 720,
+                "LoanDuration": 36
+            };
+
+            Object.keys(defaultValues).forEach(key => {
+                const input = document.getElementById(key);
+                if (input) {
+                    input.value = defaultValues[key];
+                }
+            });
+        });
+
+        document.getElementById('predictLoanDefault').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            fetch('http://localhost:5002/predict_default', {  // <-- ALTERADO PARA NOSSO ENDPOINT
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                if (data.default_prediction === 1) {
+                    resultDiv.innerHTML = 'Risk of Default! &#x1F625;'; // Red sad face emoji
+                    resultDiv.style.color = 'red';
+                } else if (data.default_prediction === 0) {
+                    resultDiv.innerHTML = 'No Risk of Default. &#x1F600;'; // Green smiling face emoji
+                    resultDiv.style.color = 'green';
+                } else {
+                    resultDiv.innerHTML = 'Error: Unable to predict. &#x1F914;'; // Thinking face emoji
+                    resultDiv.style.color = 'black';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+    </script>
+</body>
+</html>
