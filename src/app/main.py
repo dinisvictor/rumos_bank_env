@@ -8,20 +8,9 @@ import json
 import uvicorn
 import os
 
-# Encontrar o caminho absoluto correto do ficheiro `config/app.json`
-current_dir = os.path.dirname(os.path.abspath(__file__))  # Diretório onde `main.py` está
-config_path = os.path.abspath(os.path.join(current_dir, "../../config/app.json"))
-
-# Verificar se o ficheiro existe antes de carregar
-if not os.path.exists(config_path):
-    raise FileNotFoundError(f"O ficheiro de configuração não foi encontrado: {config_path}")
-
-# Carregar a configuração corretamente
-with open(config_path, "r") as f:
+# Load the application configuration
+with open('./config/app.json') as f:
     config = json.load(f)
-
-print(f"Configuração carregada de: {config_path}")
-
 
 # Definir os inputs esperados na requisição
 class Request(BaseModel):
@@ -53,7 +42,7 @@ async def startup_event():
     model_uri = f"models:/{config['model_name']}@{config['model_version']}"
     app.model = mlflow.pyfunc.load_model(model_uri=model_uri)
     
-    print(f"✅ Modelo carregado: {model_uri}")
+    print(f" Modelo carregado: {model_uri}")
 
 
 @app.post("/predict_default")
@@ -65,7 +54,5 @@ async def predict(input: Request):
 
 
 # Iniciar a aplicação na porta definida no config.json
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=config["service_port"])
+uvicorn.run(app=app, port=config["service_port"], host="0.0.0.0")
 
