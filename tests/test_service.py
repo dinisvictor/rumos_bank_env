@@ -2,7 +2,7 @@ import json
 import pytest
 import requests
 
-# Carregar as configurações do serviço
+# Load service configuration
 with open('./config/app.json') as f:
     config = json.load(f)
 
@@ -10,8 +10,8 @@ BASE_URL = f"http://localhost:{config['service_port']}/predict_default"
 
 def test_default_prediction_expects_0():
     """
-    Teste para o endpoint /predict_default com dados válidos.
-    Deve retornar uma previsão (0 = paga, 1 = inadimplente).
+    Test for the /predict_default endpoint with valid data.
+    Should return a prediction (0 = no default, 1 = default).
     """
     response = requests.post(BASE_URL, json={
         "LIMIT_BAL": 300000,
@@ -39,15 +39,15 @@ def test_default_prediction_expects_0():
         "PAY_AMT6": 5000
     })
     
-    assert response.status_code == 200, f"Erro: Código de status {response.status_code}"
+    assert response.status_code == 200, f"Error: Status code {response.status_code}"
     
     json_response = response.json()
-    assert json_response["default_prediction"]==0, "Erro: Previsão inválida (deveria ser 0)"
+    assert json_response["default_prediction"]==0, "Error: Invalid prediction (should be 0)"
 
 def test_default_prediction_expects_1():
     """
-    Teste para o endpoint /predict_default com dados válidos.
-    Deve retornar uma previsão (0 = paga, 1 = inadimplente).
+    Test for the /predict_default endpoint with valid data.
+    Should return a prediction (0 = no default, 1 = default).
     """
     response = requests.post(BASE_URL, json={
         "LIMIT_BAL": 10000,
@@ -76,24 +76,24 @@ def test_default_prediction_expects_1():
     })
     import pdb 
     pdb.set_trace ()
-    assert response.status_code == 200, f"Erro: Código de status {response.status_code}"
+    assert response.status_code == 200, f"Erro: Status code {response.status_code}"
     
     json_response = response.json()
-    assert json_response["default_prediction"]==1, "Erro: Previsão inválida (deveria ser 1)"
+    assert json_response["default_prediction"]==1, "Error: Invalid prediction (should be 1)"
 
 
 def test_invalid_request():
     """
-    Teste para o endpoint /predict_default com dados inválidos.
-    O servidor deve lidar com a entrada errada corretamente e retornar um erro 422.
+    Test for the /predict_default endpoint with invalid data.
+    The server should handle bad input correctly and return a 422 error.
     """
     response = requests.post(BASE_URL, json={
-        "LIMIT_BAL": -500,  # Valor inválido
-        "SEX": "male",  # Tipo errado (string em vez de número)
+        "LIMIT_BAL": -500,  # Invalid value
+        "SEX": "male",  # Wrong type (string instead of number)
         "EDUCATION": 2,
         "MARRIAGE": 1,
         "AGE": 20,
-        # Falta um campo obrigatório (exemplo: PAY_0)
+        # Missing a required field (e.g. PAY_0)
         "BILL_AMT1": "string instead of number",
         "BILL_AMT2": None,
         "BILL_AMT3": 3000,
@@ -108,4 +108,4 @@ def test_invalid_request():
         "PAY_AMT6": 0
     })
     
-    assert response.status_code == 422, f"Erro: Código de status {response.status_code}" # parametro incorreto
+    assert response.status_code == 422, f"Error: Status code {response.status_code}" # Incorrect parameter

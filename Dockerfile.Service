@@ -1,23 +1,23 @@
-# Usa a imagem oficial do Miniconda como base
+# Use the official Miniconda image as the base
 FROM continuumio/miniconda3
 
-# Define o diretório de trabalho no contentor
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copia apenas o arquivo de dependências primeiro (para evitar re-build desnecessário)
+# Copy only the dependency file first (to avoid unnecessary rebuilds)
 COPY ./conda.yaml conda.yaml
 
-# Cria o ambiente conda a partir do ficheiro conda.yaml
+# Create the conda environment from the conda.yaml file
 RUN conda env create -f conda.yaml
 
-# Copia o código da aplicação para o contentor
+# Copy the application code into the container
 COPY config config
 COPY ./src src
 
 COPY rumos_bank/notebooks/mlflows/scaler.pkl scaler.pkl
 
-# Expor a porta do serviço
+# Expose the service port
 EXPOSE 5002
 
-# Comando para iniciar a API
+# Command to start the API
 CMD conda run --no-capture-output -n rumos_bank_env python src/app/main.py

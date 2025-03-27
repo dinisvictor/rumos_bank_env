@@ -11,7 +11,7 @@ dependencies:
   - alembic
   - sqlalchemy
   - requests
-  - numpy==2.0.2  # Versão estável
+  - numpy==2.0.2  # Stable version
   - pandas
   - scipy
   - scikit-learn
@@ -19,7 +19,7 @@ dependencies:
   - flask
   - gunicorn
   - pip
-  - psutil>=5.8  # Atualizado para evitar problemas
+  - psutil>=5.8  # Updated to avoid issues
   - pip:
       - protobuf
       - graphene
