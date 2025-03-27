@@ -1,2 +1,4 @@
 .DS_Store
 /mlruns
+
+tests/__pycache__
