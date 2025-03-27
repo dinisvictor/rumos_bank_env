@@ -6,4 +6,4 @@ COPY frontend/form.html index.html
 
 EXPOSE 5003
 
-CMD ["python", "-m", "http.server", "5003"]
+CMD ["python", "-m", "http.server", "5003", "--bind", "0.0.0.0"]

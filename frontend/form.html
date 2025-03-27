@@ -12,7 +12,7 @@
             background-color: #f2f2f2;
         }
         .container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 50px auto;
             background-color: #fff;
             padding: 20px;
@@ -25,23 +25,22 @@
             color: #333;
         }
         form {
-            text-align: left;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
         label {
-            width: 50%;
-            margin-bottom: 5px;
             color: #555;
         }
         input[type="number"] {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+            padding: 8px;
             border-radius: 5px;
             border: 1px solid #ccc;
             box-sizing: border-box;
         }
         input[type="submit"] {
-            width: 100%;
+            grid-column: 1 / -1;
             background-color: #007bff;
             color: #fff;
             padding: 10px;
@@ -53,7 +52,7 @@
             background-color: #0056b3;
         }
         #result {
-            margin-top: 50px;
+            margin-top: 30px;
             text-align: center;
             font-size: 1.2em;
             padding: 20px;
@@ -64,84 +63,127 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Rumos Bank - Loan Default Predictor</h1>
-        <form id="predictLoanDefault">
-            <label for="Age">Age:</label>
-            <input type="number" id="Age" name="Age" required><br><br>
+<div class="container">
+    <h1>Rumos Bank - Loan Default Predictor</h1>
+    <p style="text-align: center; margin-bottom: 30px; color: #666; font-size: 1rem;">
+        The Rumos Bank é um banco que tem perdido bastante dinheiro devido à quantidade de créditos que fornece e que não são pagos dentro do prazo devido.
+        <br><br>
+        Depois do banco te contratar, como data scientist de topo, para ajudares a prever os clientes que não irão cumprir os prazos, os resultados exploratórios iniciais são bastante promissores!
+        <br><br>
+        Mas o banco está algo receoso, já que teve uma má experiência anterior com uma equipa de data scientists, em que a transição dos resultados iniciais exploratórios até de facto conseguirem ter algo em produção durou cerca de 6 meses, bem acima da estimativa inicial.
+        <br><br>
+        Por causa desta prévia má experiência, o banco desta vez quer ter garantias que a passagem dos resultados iniciais para produção é feita de forma mais eficiente. O objetivo é que a equipa de engenharia consiga colocar o vosso modelo em produção em dias em vez de meses!
+    </p>
+    <form id="predictLoanDefault">
+        <!-- Essential fields -->
+        <label for="LIMIT_BAL">LIMIT_BAL</label>
+        <input type="number" id="LIMIT_BAL" name="LIMIT_BAL" value="20000">
 
-            <label for="Income">Income (€):</label>
-            <input type="number" id="Income" name="Income" required><br><br>
+        <label for="SEX">SEX</label>
+        <input type="number" id="SEX" name="SEX" value="2">
 
-            <label for="LoanAmount">Loan Amount (€):</label>
-            <input type="number" id="LoanAmount" name="LoanAmount" required><br><br>
+        <label for="EDUCATION">EDUCATION</label>
+        <input type="number" id="EDUCATION" name="EDUCATION" value="2">
 
-            <label for="CreditScore">Credit Score:</label>
-            <input type="number" id="CreditScore" name="CreditScore" required><br><br>
+        <label for="MARRIAGE">MARRIAGE</label>
+        <input type="number" id="MARRIAGE" name="MARRIAGE" value="1">
 
-            <label for="LoanDuration">Loan Duration (months):</label>
-            <input type="number" id="LoanDuration" name="LoanDuration" required><br><br>
+        <label for="AGE">AGE</label>
+        <input type="number" id="AGE" name="AGE" value="35">
 
-            <input type="submit" value="Predict Default">
-        </form>
-        <div id="result"></div>
-    </div>
+        <label for="PAY_0">PAY_0</label>
+        <input type="number" id="PAY_0" name="PAY_0" value="0">
 
-    <script>
+        <label for="PAY_2">PAY_2</label>
+        <input type="number" id="PAY_2" name="PAY_2" value="0">
 
-        // Preencher o formulário com valores padrão
-        document.addEventListener('DOMContentLoaded', function() {
-            const defaultValues = {
-                "Age": 35,
-                "Income": 3000,
-                "LoanAmount": 15000,
-                "CreditScore": 720,
-                "LoanDuration": 36
-            };
+        <label for="PAY_3">PAY_3</label>
+        <input type="number" id="PAY_3" name="PAY_3" value="0">
 
-            Object.keys(defaultValues).forEach(key => {
-                const input = document.getElementById(key);
-                if (input) {
-                    input.value = defaultValues[key];
-                }
-            });
+        <label for="PAY_4">PAY_4</label>
+        <input type="number" id="PAY_4" name="PAY_4" value="0">
+
+        <label for="PAY_5">PAY_5</label>
+        <input type="number" id="PAY_5" name="PAY_5" value="0">
+
+        <label for="PAY_6">PAY_6</label>
+        <input type="number" id="PAY_6" name="PAY_6" value="0">
+
+        <label for="BILL_AMT1">BILL_AMT1</label>
+        <input type="number" id="BILL_AMT1" name="BILL_AMT1" value="5000">
+
+        <label for="BILL_AMT2">BILL_AMT2</label>
+        <input type="number" id="BILL_AMT2" name="BILL_AMT2" value="4000">
+
+        <label for="BILL_AMT3">BILL_AMT3</label>
+        <input type="number" id="BILL_AMT3" name="BILL_AMT3" value="3000">
+
+        <label for="BILL_AMT4">BILL_AMT4</label>
+        <input type="number" id="BILL_AMT4" name="BILL_AMT4" value="2000">
+
+        <label for="BILL_AMT5">BILL_AMT5</label>
+        <input type="number" id="BILL_AMT5" name="BILL_AMT5" value="1000">
+
+        <label for="BILL_AMT6">BILL_AMT6</label>
+        <input type="number" id="BILL_AMT6" name="BILL_AMT6" value="500">
+
+        <label for="PAY_AMT1">PAY_AMT1</label>
+        <input type="number" id="PAY_AMT1" name="PAY_AMT1" value="0">
+
+        <label for="PAY_AMT2">PAY_AMT2</label>
+        <input type="number" id="PAY_AMT2" name="PAY_AMT2" value="0">
+
+        <label for="PAY_AMT3">PAY_AMT3</label>
+        <input type="number" id="PAY_AMT3" name="PAY_AMT3" value="0">
+
+        <label for="PAY_AMT4">PAY_AMT4</label>
+        <input type="number" id="PAY_AMT4" name="PAY_AMT4" value="0">
+
+        <label for="PAY_AMT5">PAY_AMT5</label>
+        <input type="number" id="PAY_AMT5" name="PAY_AMT5" value="0">
+
+        <label for="PAY_AMT6">PAY_AMT6</label>
+        <input type="number" id="PAY_AMT6" name="PAY_AMT6" value="0">
+
+        <input type="submit" value="Predict Default">
+    </form>
+    <div id="result"></div>
+</div>
+
+<script>
+    document.getElementById('predictLoanDefault').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = Number(value);
         });
 
-        document.getElementById('predictLoanDefault').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-
-            fetch('http://localhost:5002/predict_default', {  // <-- ALTERADO PARA NOSSO ENDPOINT
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            .then(response => response.json())
-            .then(data => {
-                const resultDiv = document.getElementById('result');
-                if (data.default_prediction === 1) {
-                    resultDiv.innerHTML = 'Risk of Default! &#x1F625;'; // Red sad face emoji
-                    resultDiv.style.color = 'red';
-                } else if (data.default_prediction === 0) {
-                    resultDiv.innerHTML = 'No Risk of Default. &#x1F600;'; // Green smiling face emoji
-                    resultDiv.style.color = 'green';
-                } else {
-                    resultDiv.innerHTML = 'Error: Unable to predict. &#x1F914;'; // Thinking face emoji
-                    resultDiv.style.color = 'black';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        fetch('http://localhost:5002/predict_default', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            const resultDiv = document.getElementById('result');
+            if (data.default_prediction === 1) {
+                resultDiv.innerHTML = ' <strong>Risk of Default!</strong>';
+                resultDiv.style.color = 'red';
+            } else if (data.default_prediction === 0) {
+                resultDiv.innerHTML = '<strong>No Risk of Default</strong>';
+                resultDiv.style.color = 'green';
+            }
+            resultDiv.innerHTML += `<br><br> Probability: <strong>${data.probability}</strong>`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('result').innerHTML = ' Error connecting to API.';
         });
-
-    </script>
+    });
+</script>
 </body>
 </html>
