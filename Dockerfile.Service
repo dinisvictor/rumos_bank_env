@@ -4,7 +4,7 @@ FROM continuumio/miniconda3
 # Define o diretório de trabalho no contentor
 WORKDIR /app
 
-# Copia o ficheiro de definição do ambiente para o contentor
+# Copia apenas o arquivo de dependências primeiro (para evitar re-build desnecessário)
 COPY ./conda.yaml conda.yaml
 
 # Cria o ambiente conda a partir do ficheiro conda.yaml
@@ -14,7 +14,10 @@ RUN conda env create -f conda.yaml
 COPY config config
 COPY ./src src
 
+COPY rumos_bank/notebooks/mlflows/scaler.pkl scaler.pkl
+
+# Expor a porta do serviço
 EXPOSE 5002
 
-# Executa a aplicação FastAPI
+# Comando para iniciar a API
 CMD conda run --no-capture-output -n rumos_bank_env python src/app/main.py
