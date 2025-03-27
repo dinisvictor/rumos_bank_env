@@ -19,29 +19,29 @@ with open('./config/app.json') as f:
 
 # Define input schema
 class RequestModel(BaseModel):
-    LIMIT_BAL: confloat(ge=0) = 20000.0
+    LIMIT_BAL: confloat(ge=0, le=1000000.0) = 20000.0
     SEX: conint(ge=1, le=2) = 2
-    EDUCATION: conint(ge=1, le=4) = 2
-    MARRIAGE: conint(ge=0, le=3) = 1
-    AGE: conint(ge=18) = 24
-    PAY_0: int = 0
-    PAY_2: int = 0
-    PAY_3: int = 0
-    PAY_4: int = 0
-    PAY_5: int = 0
-    PAY_6: int = 0
-    BILL_AMT1: confloat(ge=0) = 0.0
-    BILL_AMT2: confloat(ge=0) = 0.0
-    BILL_AMT3: confloat(ge=0) = 0.0
-    BILL_AMT4: confloat(ge=0) = 0.0
-    BILL_AMT5: confloat(ge=0) = 0.0
-    BILL_AMT6: confloat(ge=0) = 0.0
-    PAY_AMT1: confloat(ge=0) = 0.0
-    PAY_AMT2: confloat(ge=0) = 0.0
-    PAY_AMT3: confloat(ge=0) = 0.0
-    PAY_AMT4: confloat(ge=0) = 0.0
-    PAY_AMT5: confloat(ge=0) = 0.0
-    PAY_AMT6: confloat(ge=0) = 0.0
+    EDUCATION: conint(ge=0, le=6) = 2  
+    MARRIAGE: conint(ge=0, le=3) = 2
+    AGE: conint(ge=21, le=79) = 24
+    PAY_0: conint(ge=-2, le=8) = 0
+    PAY_2: conint(ge=-2, le=8) = 0
+    PAY_3: conint(ge=-2, le=8) = 0
+    PAY_4: conint(ge=-2, le=8) = 0
+    PAY_5: conint(ge=-2, le=8) = 0
+    PAY_6: conint(ge=-2, le=8) = 0
+    BILL_AMT1: confloat(ge=-165580.0, le=964511.0) = 0.0
+    BILL_AMT2: confloat(ge=-69777.0, le=983931.0 ) = 0.0
+    BILL_AMT3: confloat(ge=-157264.0, le=1664089.0) = 0.0
+    BILL_AMT4: confloat(ge=-170000.0, le=891586.0) = 0.0
+    BILL_AMT5: confloat(ge=-81334.0, le= 927171.0) = 0.0
+    BILL_AMT6: confloat(ge=-209051.0, le= 961664.0) = 0.0
+    PAY_AMT1: confloat(ge=0, le= 873552.0) = 0.0
+    PAY_AMT2: confloat(ge=0, le= 1684259.0) = 0.0
+    PAY_AMT3: confloat(ge=0, le= 896040.0) = 0.0
+    PAY_AMT4: confloat(ge=0, le=621000.0) = 0.0
+    PAY_AMT5: confloat(ge=0, le=426529.0) = 0.0
+    PAY_AMT6: confloat(ge=0, le= 527143.0) = 0.0
 
 # Create FastAPI app
 app = FastAPI()
