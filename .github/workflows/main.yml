@@ -28,7 +28,7 @@ jobs:
 
          # Passo 4: Rodar o docker-compose
       - name: Run Docker Compose
-        run: docker-compose up -d
+        run: docker compose up -d
 
       # Cria o ambiente conda para rodar os testes
       - name: Criar ambiente para executar testes com o conda
