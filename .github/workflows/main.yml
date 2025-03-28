@@ -36,6 +36,11 @@ jobs:
         with:
           environment-file: conda.yaml
           activate-environment: rumos_bank_env
+
+      - name: Instalar pytest no ambiente Conda
+        run: |
+          conda activate rumos_bank_env
+      
       
       # roda dos testes
       - name: Executar testes
