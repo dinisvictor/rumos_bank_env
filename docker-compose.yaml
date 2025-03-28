@@ -21,7 +21,6 @@ services:
     ports:
       - 5002:5002
 
-  # Caso haja uma UI, podemos adaptar este serviço. Se não for necessário, remover.
   rumos-bank-ui:
     build:
       context: .
