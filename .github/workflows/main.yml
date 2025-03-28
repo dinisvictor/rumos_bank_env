@@ -41,7 +41,7 @@ jobs:
       - name: Executar testes na imagem Docker
         run: |
           # Rodar pytest dentro do contêiner ou imagem diretamente
-          docker exec -it rumos-bank-lending-service pytest    
+          docker exec rumos-bank-lending-service pytest    
 
       # - name: Instalar pytest no ambiente Conda
       #   run: |
