@@ -30,21 +30,27 @@ jobs:
       - name: Run Docker Compose
         run: docker compose up -d
 
-      # Cria o ambiente conda para rodar os testes
-      - name: Criar ambiente para executar testes com o conda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          environment-file: conda.yaml
-          activate-environment: rumos_bank_env
+      # # Cria o ambiente conda para rodar os testes
+      # - name: Criar ambiente para executar testes com o conda
+      #   uses: conda-incubator/setup-miniconda@v2
+      #   with:
+      #     environment-file: conda.yaml
+      #     activate-environment: rumos_bank_env
+
+      # Rodar os testes diretamente na imagem do Docker (adicionando o comando)
+      - name: Executar testes na imagem Docker
+        run: |
+          # Rodar pytest dentro do contêiner ou imagem diretamente
+          docker exec -it rumos-bank-lending-service pytest    
 
       # - name: Instalar pytest no ambiente Conda
       #   run: |
       #     conda activate rumos_bank_env
       
       
-      # roda dos testes
-      - name: Executar testes
-        run: conda run --no-capture-output -n rumos_bank_env pytest
+      # # roda dos testes
+      # - name: Executar testes
+      #   run: conda run --no-capture-output -n rumos_bank_env pytest
 
       # Passo 3: (Opcional) Login no Docker Hub
       # Caso precise de acesso a imagens privadas no Docker Hub ou outro registro.
