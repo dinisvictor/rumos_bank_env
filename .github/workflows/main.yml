@@ -26,6 +26,21 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+         # Passo 4: Rodar o docker-compose
+      - name: Run Docker Compose
+        run: docker-compose up -d
+
+      # Cria o ambiente conda para rodar os testes
+      - name: Criar ambiente para executar testes com o conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          environment-file: conda.yaml
+          activate-environment: OML
+      
+      # roda dos testes
+      - name: Executar testes
+        run: conda run --no-capture-output -n OML pytest
+
       # Passo 3: (Opcional) Login no Docker Hub
       # Caso precise de acesso a imagens privadas no Docker Hub ou outro registro.
       - name: Log in to Docker Hub
@@ -34,23 +49,23 @@ jobs:
           username: dinisvictor
           password: dckr_pat_SlXFGzi2XKNkO-Q0tZiyY_0i8nQ
 
-      # Passo 4: Rodar o docker-compose
-      - name: Run Docker Compose
-        run: |
-          docker-compose up -d
+      # # Passo 4: Rodar o docker-compose
+      # - name: Run Docker Compose
+      #   run: |
+      #     docker-compose up -d
 
-      # Passo 5: Verificar se os contêineres estão rodando
+      # Passo 5:
       - name: Verify Docker Containers are Running
         run: |
           docker ps
 
-      # Passo 6: Parar os contêineres após o teste
+      # Passo 6:
       - name: Stop Docker Containers
         run: |
           docker-compose down
         
       - name: Enviar imagem mlflow para o repositório do GitHub
-        run: docker push ghcr.io/mlflow/mlflow
+        run: docker push ghcr.io/mlflow/mlflow:latest
 
       - name: Enviar imagem serviço para o repositório do GitHub
         run: docker push ghcr.io/dinisvictor/rumos_bank_service:latest
