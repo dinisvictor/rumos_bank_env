@@ -37,7 +37,7 @@ jobs:
       # Passo 4: Rodar o docker-compose
       - name: Run Docker Compose
         run: |
-          docker-compose -f docker-compose.yml up --build -d
+          docker-compose up -d
 
       # Passo 5: Verificar se os contêineres estão rodando
       - name: Verify Docker Containers are Running
