@@ -13,7 +13,7 @@ mlruns/models/random_forest/*
 !mlruns/models/random_forest/aliases/
 !mlruns/models/random_forest/aliases/champion
 !mlruns/models/random_forest/versions/
-!mlruns/models/random_forest/versions/3/**  
+!mlruns/models/random_forest/versions/1/**  
 
 # Ignorar ficheiros de cache dos testes
 tests/__pycache__/
