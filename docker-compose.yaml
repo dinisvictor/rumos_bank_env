@@ -20,6 +20,10 @@ services:
     container_name: rumos-bank-lending-service
     ports:
       - 5002:5002
+    volumes:
+    - ./tests:/app/tests               
+       
+    
 
   rumos-bank-ui:
     build:

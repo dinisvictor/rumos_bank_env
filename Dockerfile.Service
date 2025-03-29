@@ -13,6 +13,7 @@ RUN conda env create -f conda.yaml
 # Copy the application code into the container
 COPY config config
 COPY ./src src
+COPY tests tests
 
 COPY rumos_bank/notebooks/mlflows/scaler.pkl scaler.pkl
 
