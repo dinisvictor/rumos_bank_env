@@ -55,6 +55,10 @@ jobs:
           echo "❌ Timeout waiting for API!"
           exit 1
 
+        #  NOVO BLOCO — logs antes de testar
+      - name: Show service logs before tests
+        run: docker logs rumos-bank-lending-service
+
 
 
         # Rodar testes de serviço
