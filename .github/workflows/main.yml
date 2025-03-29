@@ -45,16 +45,18 @@ jobs:
       - name: Wait for API to be ready
         run: |
           echo "⏳ Waiting for API inside container..."
-          for i in {1..30}; do
-            if docker exec rumos-bank-lending-service curl -s http://localhost:5002/docs > /dev/null; then
-              echo " API is ready!"
+          for i in {1..60}; do
+            if curl --silent --fail http://rumos-bank-lending-service:5002/docs > /dev/null; then
+              echo "API is ready!"
               exit 0
             fi
-            echo "⏳ Still waiting..."
-            sleep 3
+            echo "Still waiting..."
+            sleep 5
           done
           echo "Timeout waiting for API!"
+          docker logs rumos-bank-lending-service
           exit 1
+
 
         # Rodar testes de serviço
       - name: Testes - Service
