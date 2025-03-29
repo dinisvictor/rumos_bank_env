@@ -44,10 +44,10 @@ jobs:
        # Esperar a API estar pronta
       - name: Wait for API to be ready
         run: |
-          echo "⏳ Waiting for service to start on port 5002..."
+          echo "⏳ Waiting for API inside container..."
           for i in {1..30}; do
-            if curl --silent http://rumos-bank-lending-service:5002/docs > /dev/null; then
-              echo "API is ready!"
+            if docker exec rumos-bank-lending-service curl -s http://localhost:5002/docs > /dev/null; then
+              echo " API is ready!"
               exit 0
             fi
             echo "⏳ Still waiting..."

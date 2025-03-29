@@ -6,7 +6,7 @@ import requests
 with open('./config/app.json') as f:
     config = json.load(f)
 
-BASE_URL = f"http://localhost:{config['service_port']}/predict_default"
+BASE_URL = f"{config['service_base_url']}:{config['service_port']}/predict_default"
 
 def test_default_prediction_expects_0():
     """
