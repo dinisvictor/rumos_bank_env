@@ -41,21 +41,20 @@ jobs:
       # - name: Run tests inside Docker
       #   run: docker exec rumos-bank-lending-service conda run -n rumos_bank_env pytest tests/
 
-       # Esperar a API estar pronta
       - name: Wait for API to be ready
         run: |
-          echo "⏳ Waiting for API inside container..."
-          for i in {1..60}; do
-            if curl --silent --fail http://rumos-bank-lending-service:5002/docs > /dev/null; then
-              echo "API is ready!"
+          echo "⏳ Waiting for service to start on port 5002..."
+          for i in {1..30}; do
+            if curl --silent http://localhost:5002/docs > /dev/null; then
+              echo "✅ API is ready!"
               exit 0
             fi
-            echo "Still waiting..."
-            sleep 5
+            echo "⏳ Still waiting..."
+            sleep 3
           done
-          echo "Timeout waiting for API!"
-          docker logs rumos-bank-lending-service
+          echo "❌ Timeout waiting for API!"
           exit 1
+
 
 
         # Rodar testes de serviço
