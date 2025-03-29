@@ -1,6 +1,6 @@
 services:
 
-  mlflow-tracking-server:
+  mlflow-tracking:
     image: ghcr.io/mlflow/mlflow
     command: mlflow ui --port 5001 --host 0.0.0.0 --backend-store-uri ./mlruns --artifacts-destination ./mlruns
     volumes:
