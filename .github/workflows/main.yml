@@ -42,14 +42,19 @@ jobs:
       #   run: docker exec rumos-bank-lending-service conda run -n rumos_bank_env pytest tests/
 
        # Esperar a API estar pronta
-      - name: Aguardar serviço da API iniciar (porta 5002)
+      - name: Wait for API to be ready
         run: |
-          echo "⏳ Aguardando o serviço iniciar na porta 5002..."
-          until curl -s http://localhost:5002/docs > /dev/null; do
-            echo "Aguardando API no localhost:5002..."
+          echo "⏳ Waiting for service to start on port 5002..."
+          for i in {1..30}; do
+            if curl --silent http://rumos-bank-lending-service:5002/docs > /dev/null; then
+              echo "API is ready!"
+              exit 0
+            fi
+            echo "⏳ Still waiting..."
             sleep 3
           done
-          echo "API está ativa!"
+          echo "Timeout waiting for API!"
+          exit 1
 
         # Rodar testes de serviço
       - name: Testes - Service
