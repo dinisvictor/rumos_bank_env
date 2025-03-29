@@ -38,12 +38,9 @@ jobs:
       #     activate-environment: rumos_bank_env
 
       # Rodar os testes diretamente na imagem do Docker (adicionando o comando)
-      - name: Executar testes dentro do container
-        run: |
-          docker exec rumos-bank-lending-service bash -c "
-          cd /app &&
-          conda run --no-capture-output -n rumos_bank_env pytest tests/
-          "
+      - name: Run tests inside Docker
+        run: docker exec rumos-bank-lending-service conda run -n rumos_bank_env pytest tests/
+        
    
 
       # - name: Instalar pytest no ambiente Conda
