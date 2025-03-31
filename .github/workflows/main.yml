@@ -33,6 +33,12 @@ jobs:
       - name: Check container logs (debug)
         run: docker logs rumos-bank-lending-service || true
 
+      - name: Check mlflow-tracking mlruns/
+        run: docker exec mlflow-tracking ls -l mlruns/
+
+      - name: Check mlflow-tracking mlruns/models
+        run: docker exec mlflow-tracking ls -l mlruns/models
+
       - name: Wait for API to be ready on localhost
         run: |
           echo "⏳ Waiting for API on localhost:5002..."
