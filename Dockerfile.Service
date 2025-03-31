@@ -14,7 +14,7 @@ RUN conda env create -f conda.yaml
 COPY config config
 COPY ./src src
 COPY tests tests
-COPY mlruns /mlruns
+#COPY mlruns /mlruns
 COPY rumos_bank/notebooks/mlflows/scaler.pkl scaler.pkl
 
 # Expose the service port
