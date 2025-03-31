@@ -61,6 +61,7 @@ async def startup_event():
 
     # Load model from MLflow Model Registry
     model_uri = f"models:/{config['model_name']}@{config['model_version']}"
+    print(model_uri)
     app.model = mlflow.sklearn.load_model(model_uri=model_uri)
     print(f"Model loaded: {model_uri}")
 
