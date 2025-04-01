@@ -1,3 +1,4 @@
+# Import of the necessary libraries
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
@@ -13,11 +14,13 @@ import uvicorn
 
 from pathlib import Path
 
-# Load application configuration
+# Here I load the app configuration (like the model name, version, and ports) from a JSON file.
+# This keeps sensitive or changeable settings separate from the code itself.
 with open('./config/app.json') as f:
     config = json.load(f)
 
-# Define input schema
+# This class defines the expected structure and validation for the input data sent to the API.
+# I’m using Pydantic to ensure values fall within realistic bounds based on the training data.
 class RequestModel(BaseModel):
     LIMIT_BAL: confloat(ge=0, le=1000000.0) = 20000.0
     SEX: conint(ge=1, le=2) = 2
@@ -43,10 +46,11 @@ class RequestModel(BaseModel):
     PAY_AMT5: confloat(ge=0, le=426529.0) = 0.0
     PAY_AMT6: confloat(ge=0, le= 527143.0) = 0.0
 
-# Create FastAPI app
+# Here I initialize the FastAPI application
 app = FastAPI()
 
-# Enable CORS (for local testing or front-end integration)
+# I enable CORS to allow requests from any origin.
+# This is especially useful during local development or if a frontend (e.g., React or Streamlit) is calling the API.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -54,9 +58,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# This function runs automatically when the app starts.
+# I use it to load the model and scaler into memory so predictions are ready immediately.
 @app.on_event("startup")
 async def startup_event():
     """Load ML model and pre-fitted scaler on app startup."""
+
     mlflow.set_tracking_uri(f"{config['tracking_base_url']}:{config['tracking_port']}")
 
     # Load model from MLflow Model Registry
@@ -65,7 +72,7 @@ async def startup_event():
     app.model = mlflow.sklearn.load_model(model_uri=model_uri)
     print(f"Model loaded: {model_uri}")
 
-    # Load pre-trained scaler
+    # # Load the scaler used during model training to ensure consistent preprocessing
     scaler_path = Path("scaler.pkl")
     if scaler_path.exists():
         app.scaler = joblib.load(scaler_path)
@@ -73,12 +80,15 @@ async def startup_event():
     else:
         print("Scaler file 'scaler.pkl' not found!")
 
+# This is the main prediction endpoint of the API.
+# When a POST request is sent to /predict_default with the required input, it returns the prediction.
 @app.post("/predict_default", response_description="Credit Default Prediction")
 async def predict(input: RequestModel):
     """
     Predict credit default based on user input.
     Uses a decision threshold of 0.3 as defined during training.
     """
+    # Define the order of features to ensure consistency with how the model was trained
     feature_order = [
         "LIMIT_BAL", "SEX", "EDUCATION", "MARRIAGE", "AGE",
         "PAY_0", "PAY_2", "PAY_3", "PAY_4", "PAY_5", "PAY_6",
@@ -100,7 +110,7 @@ async def predict(input: RequestModel):
     # Predict probability of default (class 1)
     proba = app.model.predict_proba(input_scaled_df)[0][1]
 
-    # Apply threshold of 0.3
+    # Classify the customer as default (1) if the probability is greater than or equal to 0.3
     prediction = int(proba >= 0.3)
 
     return {

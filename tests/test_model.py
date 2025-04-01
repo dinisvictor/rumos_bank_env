@@ -10,30 +10,30 @@ from pathlib import Path
 with open('./config/app.json') as f:
     config = json.load(f)
 
-# @pytest.fixture(scope="module")
-# def model():
-#     """Load trained model from MLflow Model Registry (sklearn flavor)."""
-#     #mlflow.set_tracking_uri(f"{config['tracking_base_url']}:{config['tracking_port']}")
-#     model_uri = f"models:/{config['model_name']}@{config['model_version']}"
-#     return mlflow.sklearn.load_model(model_uri)
-
 @pytest.fixture(scope="module")
 def model():
+    """
+    Load the trained model from MLflow Model Registry.
+    Uses the 'champion' version alias (could also use a specific version).
+    """
     with open('./config/app.json') as f:
         config = json.load(f)
+    # Set MLflow tracking server URI (e.g., localhost:5001)
     mlflow.set_tracking_uri(f"http://localhost:{config['tracking_port']}")
     model_name = config["model_name"]
     model_version = config["model_version"]
+    
+    # Load the model using the alias 'champion'
     return mlflow.sklearn.load_model(
-        model_uri=f"models:/{model_name}@champion"#model_uri=f"models:/{model_name}@{model_version}"
+        model_uri=f"models:/{model_name}@{model_version}"
     )
 
 
 @pytest.fixture(scope="module")
 def scaler():
-    # import pdb
-    # pdb.set_trace()
-     # Load pre-trained scaler
+    """
+    Load the scaler object used during training for consistent preprocessing.
+    """
     scaler_path = Path("rumos_bank/notebooks/mlflows/scaler.pkl")
     if scaler_path.exists():
         scaler = joblib.load(scaler_path)
@@ -46,7 +46,11 @@ def scaler():
 
 
 def test_model_prediction_low_risk(model, scaler):
-    """Expect 0 (no default) for a customer with good payment behavior."""
+    """
+    Functional test:
+    Predicts a customer with good credit behavior.
+    Expects a prediction of 0 (no default).
+    """
     input_data = {
         "LIMIT_BAL": 300000, "SEX": 2, "EDUCATION": 2, "MARRIAGE": 1, "AGE": 45,
         "PAY_0": 0, "PAY_2": 0, "PAY_3": 0, "PAY_4": 0, "PAY_5": 0, "PAY_6": 0,
@@ -57,15 +61,19 @@ def test_model_prediction_low_risk(model, scaler):
     }
     df = pd.DataFrame([input_data])
     scaled = scaler.transform(df)
-    proba = model.predict_proba(scaled)[0][1]
+    proba = model.predict_proba(scaled)[0][1] # Probability of class 1 (default)
     prediction = int(proba >= 0.3)
 
     assert prediction == 0
-    assert 0.0 <= proba <= 1.0
+    assert 0.0 <= proba <= 1.0 # Valid probability range
 
 
 def test_model_prediction_high_risk(model, scaler):
-    """Expect 1 (default) for a high-risk customer with overdue payments."""
+    """
+    Functional test:
+    Predicts a high-risk customer with poor payment history.
+    Expects a prediction of 1 (default).
+    """
     input_data = {
         "LIMIT_BAL": 10000, "SEX": 1, "EDUCATION": 2, "MARRIAGE": 1, "AGE": 21,
         "PAY_0": 8, "PAY_2": 8, "PAY_3": 8, "PAY_4": 8, "PAY_5": 8, "PAY_6": 8,
@@ -84,7 +92,10 @@ def test_model_prediction_high_risk(model, scaler):
 
 
 def test_model_output_shape(model, scaler):
-    """Model should return a single value (shape = (1,))"""
+    """
+    Structural test:
+    Ensures the model output shape is correct (predict returns array of shape (1,)).
+    """
     input_data = {
         "LIMIT_BAL": 20000, "SEX": 2, "EDUCATION": 2, "MARRIAGE": 1, "AGE": 35,
         "PAY_0": 0, "PAY_2": 0, "PAY_3": 0, "PAY_4": 0, "PAY_5": 0, "PAY_6": 0,
@@ -97,29 +108,5 @@ def test_model_output_shape(model, scaler):
     scaled = scaler.transform(df)
     prediction = model.predict(scaled)
 
-    assert prediction.shape == (1,)
+    assert prediction.shape == (1,) # Must return a single prediction
 
-
-# def test_invalid_input_handling(model, scaler):
-#     """Model should raise or handle gracefully invalid input (e.g. negative values)."""
-#     input_data = {
-#         "LIMIT_BAL": -500, "SEX": 2, "EDUCATION": 2, "MARRIAGE": 1, "AGE": ,
-#         "PAY_0": 0, "PAY_2": 0, "PAY_3": 0, "PAY_4": 0, "PAY_5": 0, "PAY_6": 0,
-#         "BILL_AMT1": -5000, "BILL_AMT2": 4000, "BILL_AMT3": 3000,
-#         "BILL_AMT4": 2000, "BILL_AMT5": 1000, "BILL_AMT6": 500,
-#         "PAY_AMT1": 0, "PAY_AMT2": 0, "PAY_AMT3": 0,
-#         "PAY_AMT4": 0, "PAY_AMT5": 0, "PAY_AMT6": 0
-#     }
-#     df = pd.DataFrame([input_data])
-#     with pytest.raises(Exception):
-#         scaled = scaler.transform(df)
-#         model.predict(scaled)
-
-# def test_model_prediction_threshold_boundary():
-#     input_data = {
-#         # Dados artificiais que resultam em proba ~0.3
-#         ...
-#     }
-#     ...
-#     # Apenas garantir que o modelo retorna um valor válido
-#     assert prediction in [0, 1]

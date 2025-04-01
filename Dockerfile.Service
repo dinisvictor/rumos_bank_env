@@ -5,16 +5,22 @@ FROM continuumio/miniconda3
 WORKDIR /app
 
 # Copy only the dependency file first (to avoid unnecessary rebuilds)
+# This helps avoid reinstalling dependencies if the environment hasn't changed
 COPY ./conda.yaml conda.yaml
 
 # Create the conda environment from the conda.yaml file
 RUN conda env create -f conda.yaml
 
-# Copy the application code into the container
+# Copy configuration files
 COPY config config
+
+# Copy source code
 COPY ./src src
+
+# Copy test files
 COPY tests tests
-#COPY mlruns /mlruns
+
+# Copy a specific artifact used by the model 
 COPY rumos_bank/notebooks/mlflows/scaler.pkl scaler.pkl
 
 # Expose the service port
