@@ -162,7 +162,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: dinisvictor
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password: dckr_pat_SlXFGzi2XKNkO-Q0tZiyY_0i8nQ
 
       # Step 5: Run Docker Compose 
       - name: Run Docker Compose
