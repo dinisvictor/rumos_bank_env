@@ -129,6 +129,20 @@ jobs:
   docker-compose:
     runs-on: ubuntu-latest
 
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+        # Usar plataforma arm64
+    strategy:
+      matrix:
+        platform: [linux/arm64]
+
+    steps:
+      - name: Set up QEMU (para suportar multiplataforma)
+        uses: docker/setup-qemu-action@v2
+  
     steps:
       # Step 1: Checkout the code
       - name: Checkout code
