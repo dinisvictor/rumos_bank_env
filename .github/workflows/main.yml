@@ -1,3 +1,120 @@
+# name: Build and Run Docker Compose
+
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
+
+# jobs:
+#   docker-compose:
+#     runs-on: ubuntu-latest
+
+#     services:
+#       docker:
+#         image: docker:20.10.16
+#         options: --privileged
+
+#     steps:
+#       # Passo 1: Fazer checkout do código
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       # Passo 2: Configurar Docker Buildx (opcional, mas recomendado para compatibilidade com multiplataformas)
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v1
+
+#       # Passo 4: Rodar o docker-compose
+#       - name: Run Docker Compose
+#         run: docker compose up -d
+
+#       - name: Check container logs (debug)
+#         run: docker logs rumos-bank-lending-service || true
+
+#       - name: Check mlflow-tracking mlruns/
+#         run: docker exec mlflow-tracking ls -l mlruns/
+
+#       - name: Check mlflow-tracking mlruns/models
+#         run: docker exec mlflow-tracking ls -l mlruns/models
+
+#       - name: Wait for API to be ready on localhost
+#         run: |
+#           echo "⏳ Waiting for API on localhost:5002..."
+#           for i in {1..30}; do
+#             if curl --silent http://localhost:5002/docs > /dev/null; then
+#               echo "✅ API is ready!"
+#               exit 0
+#             fi
+#             echo "⏳ Still waiting..."
+#             sleep 3
+#           done
+#           echo "❌ Timeout waiting for API!"
+#           docker logs rumos-bank-lending-service || true
+#           exit 1
+
+
+
+#         #  NOVO BLOCO — logs antes de testar
+#       - name: Show service logs before tests
+#         run: docker logs rumos-bank-lending-service
+
+
+
+#         # Rodar testes de serviço
+#       - name: Testes - Service
+#         run: |
+#           docker exec rumos-bank-lending-service conda run -n rumos_bank_env pytest tests/test_service.py
+
+#       # Rodar testes de modelo
+#       - name: Testes - Model
+#         run: |
+#           docker exec rumos-bank-lending-service conda run -n rumos_bank_env pytest tests/test_model.py
+
+        
+  
+#       # - name: Instalar pytest no ambiente Conda
+#       #   run: |
+#       #     conda activate rumos_bank_env
+      
+      
+#       # # roda dos testes
+#       # - name: Executar testes
+#       #   run: conda run --no-capture-output -n rumos_bank_env pytest
+
+#       # Passo 3: (Opcional) Login no Docker Hub
+#       # Caso precise de acesso a imagens privadas no Docker Hub ou outro registro.
+#       - name: Log in to Docker Hub
+#         uses: docker/login-action@v2
+#         with:
+#           username: dinisvictor
+#           password: dckr_pat_SlXFGzi2XKNkO-Q0tZiyY_0i8nQ
+
+#       # # Passo 4: Rodar o docker-compose
+#       # - name: Run Docker Compose
+#       #   run: |
+#       #     docker-compose up -d
+
+#       # Passo 5:
+#       - name: Verify Docker Containers are Running
+#         run: |
+#           docker ps
+
+#       # Passo 6:
+#       - name: Stop Docker Containers
+#         run: |
+#           docker-compose down
+        
+#       - name: Enviar imagem mlflow para o repositório do GitHub
+#         run: docker push ghcr.io/mlflow/mlflow:latest
+
+#       - name: Enviar imagem serviço para o repositório do GitHub
+#         run: docker push ghcr.io/dinisvictor/rumos_bank_service:latest
+
+#       - name: Enviar imagem ui para o repositório do GitHub
+#         run: docker push ghcr.io/dinisvictor/rumos_bank_ui:latest
+
 name: Build and Run Docker Compose
 
 on:
@@ -12,33 +129,53 @@ jobs:
   docker-compose:
     runs-on: ubuntu-latest
 
-    services:
-      docker:
-        image: docker:20.10.16
-        options: --privileged
-
     steps:
-      # Passo 1: Fazer checkout do código
+      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Passo 2: Configurar Docker Buildx (opcional, mas recomendado para compatibilidade com multiplataformas)
+      # Step 2: Set up Docker Buildx (for multi-platform builds if needed)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      # Passo 4: Rodar o docker-compose
-      - name: Run Docker Compose
-        run: docker compose up -d
+      # # Step 3: Log in to GitHub Container Registry
+      # - name: Log in to GitHub Container Registry
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Step 4: (Optional) Log in to Docker Hub 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: dinisvictor
+          password: dckr_pat_SlXFGzi2XKNkO-Q0tZiyY_0i8nQ
+
+      # Step 5: Build and push mlruns image (used in Dockerfile.Service)
+      - name: Build mlruns image
+        run: docker build -t ghcr.io/dinisvictor/mlruns:latest -f Dockerfile.mlruns .
+
+      - name: Push mlruns image
+        run: docker push ghcr.io/dinisvictor/mlruns:latest
+
+      # Step 6: Run Docker Compose
+      - name: Run Docker Compose
+        run: docker compose up --build -d
+
+      # Step 7: Show container logs (debug)
       - name: Check container logs (debug)
         run: docker logs rumos-bank-lending-service || true
 
+      # Step 8: Inspect mlruns content inside mlflow-tracking
       - name: Check mlflow-tracking mlruns/
         run: docker exec mlflow-tracking ls -l mlruns/
 
       - name: Check mlflow-tracking mlruns/models
         run: docker exec mlflow-tracking ls -l mlruns/models
 
+      # Step 9: Wait for API to be ready
       - name: Wait for API to be ready on localhost
         run: |
           echo "⏳ Waiting for API on localhost:5002..."
@@ -54,63 +191,27 @@ jobs:
           docker logs rumos-bank-lending-service || true
           exit 1
 
-
-
-        #  NOVO BLOCO — logs antes de testar
+      # Step 10: Show logs before tests (optional debug)
       - name: Show service logs before tests
         run: docker logs rumos-bank-lending-service
 
-
-
-        # Rodar testes de serviço
-      - name: Testes - Service
+      # Step 11: Run service tests
+      - name: Run Service Tests
         run: |
           docker exec rumos-bank-lending-service conda run -n rumos_bank_env pytest tests/test_service.py
 
-      # Rodar testes de modelo
-      - name: Testes - Model
+      # Step 12: Run model tests
+      - name: Run Model Tests
         run: |
           docker exec rumos-bank-lending-service conda run -n rumos_bank_env pytest tests/test_model.py
 
-        
-  
-      # - name: Instalar pytest no ambiente Conda
-      #   run: |
-      #     conda activate rumos_bank_env
-      
-      
-      # # roda dos testes
-      # - name: Executar testes
-      #   run: conda run --no-capture-output -n rumos_bank_env pytest
-
-      # Passo 3: (Opcional) Login no Docker Hub
-      # Caso precise de acesso a imagens privadas no Docker Hub ou outro registro.
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: dinisvictor
-          password: dckr_pat_SlXFGzi2XKNkO-Q0tZiyY_0i8nQ
-
-      # # Passo 4: Rodar o docker-compose
-      # - name: Run Docker Compose
-      #   run: |
-      #     docker-compose up -d
-
-      # Passo 5:
-      - name: Verify Docker Containers are Running
-        run: |
-          docker ps
-
-      # Passo 6:
-      - name: Stop Docker Containers
-        run: |
-          docker-compose down
-        
-      - name: Enviar imagem mlflow para o repositório do GitHub
-        run: docker push ghcr.io/mlflow/mlflow:latest
-
-      - name: Enviar imagem serviço para o repositório do GitHub
+      # Step 13: Push built service image (if needed)
+      - name: Push service image
         run: docker push ghcr.io/dinisvictor/rumos_bank_service:latest
 
-      - name: Enviar imagem ui para o repositório do GitHub
+      - name: Push UI image
         run: docker push ghcr.io/dinisvictor/rumos_bank_ui:latest
+
+      # Step 14: Tear down containers
+      - name: Stop Docker Containers
+        run: docker compose down
