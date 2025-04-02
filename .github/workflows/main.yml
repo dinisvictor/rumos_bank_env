@@ -152,14 +152,7 @@ jobs:
         with:
           username: dinisvictor
           password: dckr_pat_SlXFGzi2XKNkO-Q0tZiyY_0i8nQ
-
-      # Step 5: Build and push mlruns image (used in Dockerfile.Service)
-      - name: Build mlruns image
-        run: docker build -t ghcr.io/dinisvictor/mlruns:latest -f Dockerfile.mlruns .
-
-      - name: Push mlruns image
-        run: docker push ghcr.io/dinisvictor/mlruns:latest
-
+          
       # Step 6: Run Docker Compose
       - name: Run Docker Compose
         run: docker compose up --build -d
