@@ -3,11 +3,11 @@ services:
   mlflow-tracking:
     image: ghcr.io/mlflow/mlflow
     command: mlflow ui --port 5001 --host 0.0.0.0 --backend-store-uri ./mlruns --artifacts-destination ./mlruns
-    volumes:
-      - ./mlruns:/mlruns
     container_name: mlflow-tracking
     ports:
       - 5001:5001
+    volumes:
+      - mlruns_data:/mlruns
 
   rumos-bank-lending-service:
     build:
@@ -21,6 +21,7 @@ services:
     ports:
       - 5002:5002
     volumes:
+    - mlruns_data:/mlruns
     - ./tests:/app/tests               
        
     
@@ -35,3 +36,7 @@ services:
     container_name: rumos-bank-ui
     ports:
       - 5003:5003
+
+
+volumes:
+  mlruns_data:

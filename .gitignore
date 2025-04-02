@@ -1,19 +1,5 @@
 # Ignorar ficheiros do macOS
 .DS_Store
 
-# Ignorar todas as runs do MLflow
-mlruns/*
-
-# # Exceto o modelo random_forest e alias champion
-# !mlruns/models/
-# mlruns/models/*
-# !mlruns/models/random_forest/
-# mlruns/models/random_forest/*
-# !mlruns/models/random_forest/meta.yaml
-# !mlruns/models/random_forest/aliases/
-# !mlruns/models/random_forest/aliases/champion
-# !mlruns/models/random_forest/versions/
-# !mlruns/models/random_forest/versions/2/**  
-
 # Ignorar ficheiros de cache dos testes
 tests/__pycache__/
