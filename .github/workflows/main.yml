@@ -153,7 +153,7 @@ jobs:
           username: dinisvictor
           password: dckr_pat_SlXFGzi2XKNkO-Q0tZiyY_0i8nQ
 
-      # Step 6: Run Docker Compose
+      # Step 6: Run Docker Compose 
       - name: Run Docker Compose
         run: docker compose up --build -d
 
