@@ -1,0 +1,11 @@
+# Use a minimal image just to store the folder
+FROM alpine:latest
+
+# Set the working directory inside the container
+WORKDIR /mlruns
+
+# Copy the local mlruns folder into the image
+COPY ./mlruns /mlruns
+
+# Define a default command to prevent the container from exiting immediately
+CMD ["tail", "-f", "/dev/null"]

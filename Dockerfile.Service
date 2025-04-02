@@ -1,8 +1,14 @@
+# First stage: Pull the mlruns folder from the image
+FROM ghcr.io/dinisvictor/mlruns:latest AS mlruns_data
+
 # Use the official Miniconda image as the base
 FROM continuumio/miniconda3
 
 # Set the working directory inside the container
 WORKDIR /app
+
+# Copy the mlruns folder from the mlruns_data container stage
+COPY --from=mlruns_data /mlruns /mlruns
 
 # Copy only the dependency file first (to avoid unnecessary rebuilds)
 # This helps avoid reinstalling dependencies if the environment hasn't changed
