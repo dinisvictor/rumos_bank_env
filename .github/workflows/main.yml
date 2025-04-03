@@ -155,7 +155,7 @@ jobs:
         with:
           registry: ghcr.io
           username: dinisvictor
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_PAT }}
           
       # Step 4: (Optional) Log in to Docker Hub
       - name: Log in to Docker Hub
@@ -219,3 +219,4 @@ jobs:
       - name: Stop Docker Containers
         run: docker compose down
 
+      
