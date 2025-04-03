@@ -19,7 +19,7 @@ def model():
     with open('./config/app.json') as f:
         config = json.load(f)
     # Set MLflow tracking server URI (e.g., localhost:5001)
-    mlflow.set_tracking_uri(f"http://localhost:{config['tracking_port']}")
+    mlflow.set_tracking_uri(f"http://mlflow-tracking:{config['tracking_port']}")
     model_name = config["model_name"]
     model_version = config["model_version"]
     
