@@ -208,9 +208,16 @@ jobs:
         run: |
           docker exec rumos-bank-lending-service conda run -n rumos_bank_env pytest tests/test_model.py
 
-      # Step 11: Push built images
+      # Step 11: Tag and Push built images
+
+      - name: Tag service image for GitHub Container Registry
+        run: docker tag rumos_bank_service ghcr.io/dinisvictor/rumos_bank_service:latest
+
       - name: Push service image
         run: docker push ghcr.io/dinisvictor/rumos_bank_service:latest
+
+      - name: Tag UI image for GitHub Container Registry
+        run: docker tag rumos_bank_ui ghcr.io/dinisvictor/rumos_bank_ui:latest
 
       - name: Push UI image
         run: docker push ghcr.io/dinisvictor/rumos_bank_ui:latest
