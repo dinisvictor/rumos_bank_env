@@ -16,7 +16,7 @@ This project was developed to support Rumos Bank in predicting the probability o
 
 ---
 
-## Data Analysis and Model Training
+# Data Analysis and Model Training
 
 The notebook `notebooks/rumos_bank_lending_prediction.ipynb` includes:
 
@@ -67,51 +67,51 @@ To allow the pipeline to push to GHCR, you need to:
 
 1. Create a Personal Access Token (PAT)
 
-Go to GitHub Settings > Developer Settings > Tokens
-Create a token with the following permissions:
+- Go to GitHub Settings > Developer Settings > Tokens
 
-    write:packages
+- Create a token with the following permissions:
 
-    read:packages
-
-    delete:packages (optional)
+  - write:packages
+  - read:packages
+  - delete:packages (optional)
 
 2. Add the token as a secret
 
 In the repository:
 
-    Go to Settings > Secrets and variables > Actions
+- Go to Settings > Secrets and variables > Actions
 
-    Click New repository secret
+- Click New repository secret
 
-    Name: GHCR_PAT
-
-    Value: paste the PAT you created
+   - Name: GHCR_PAT
+   - Value: paste the PAT you created
 
 This token will be used in the pipeline step:
 
+```bash
   name: Log in to GitHub Container Registry
   uses: docker/login-action@v2
   with:
     registry: ghcr.io
     username: ${{ github.actor }}
     password: ${{ secrets.GHCR_PAT }}
-
+```
 # Testing
 
 Unit and integration tests are written using Pytest.
 
-Model Tests (in tests/test_model.py)
+Model Tests (in **tests/test_model.py**)
 
 - Validates predictions for low-risk and high-risk profiles
 - Ensures output shape and valid probability values
 
-Service Tests (in tests/test_service.py)
+Service Tests (in **tests/test_service.py**)
 
 - Tests POST requests to the /predict_default endpoin
 - Checks for correct response structure and status codes
 
 You can run tests locally with:
+
 ```bash
 pytest tests/
 ```
@@ -120,6 +120,7 @@ All tests are also executed in the CI/CD pipeline.
 
 # Docker Services Summary
 
+```bash
 services:
   mlflow-tracking:
     image: ghcr.io/mlflow/mlflow
@@ -142,8 +143,9 @@ services:
 
 volumes:
   mlruns_data:
+```
 
-## Final Remarks
+# Final Remarks
 
 This project aimed to implement a complete MLOps pipeline for credit default prediction using real-world tools and workflows. From data preprocessing and model training to model serving, testing, and continuous integration — all stages are automated and reproducible.
 
