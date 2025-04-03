@@ -29,7 +29,7 @@ COPY tests tests
 # Copy a specific artifact used by the model 
 COPY rumos_bank/notebooks/mlflows/scaler.pkl scaler.pkl
 
-# Expose the service port
+# Expose the service port 5002
 EXPOSE 5002
 
 # Command to start the API
