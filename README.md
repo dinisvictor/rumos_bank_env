@@ -51,9 +51,10 @@ docker compose up --build
 
 # CI/CD Pipeline (GitHub Actions)
 
-Description
+## Description
 
-The pipeline is defined in .github/workflows/main.yml. It executes the following steps:
+The pipeline is defined in **.github/workflows/main.yml.** It executes the following steps:
+
 1.	Checks out the repository
 2.	Builds and runs all Docker services using Docker Compose
 3.	Waits for the API to become available
@@ -61,27 +62,27 @@ The pipeline is defined in .github/workflows/main.yml. It executes the following
 5.	Pushes Docker images to GitHub Container Registry (GHCR)
 6.	Shuts down all running containers
 
-# Secrets Configuration
+## Secrets Configuration
 
 To allow the pipeline to push to GHCR, you need to:
 
-1. Create a Personal Access Token (PAT)
+A. Create a Personal Access Token (PAT)
 
-- Go to GitHub Settings > Developer Settings > Tokens
+1. Go to GitHub Settings > Developer Settings > Tokens
 
-- Create a token with the following permissions:
+2. Create a token with the following permissions:
 
   - write:packages
   - read:packages
   - delete:packages (optional)
 
-2. Add the token as a secret
+3. Add the token as a secret
 
 In the repository:
 
-- Go to Settings > Secrets and variables > Actions
+4. Go to Settings > Secrets and variables > Actions
 
-- Click New repository secret
+5. Click New repository secret
 
    - Name: GHCR_PAT
    - Value: paste the PAT you created
@@ -100,12 +101,12 @@ This token will be used in the pipeline step:
 
 Unit and integration tests are written using Pytest.
 
-Model Tests (in **tests/test_model.py**)
+A. Model Tests (in **tests/test_model.py**)
 
 - Validates predictions for low-risk and high-risk profiles
 - Ensures output shape and valid probability values
 
-Service Tests (in **tests/test_service.py**)
+B. Service Tests (in **tests/test_service.py**)
 
 - Tests POST requests to the /predict_default endpoin
 - Checks for correct response structure and status codes
@@ -116,7 +117,7 @@ You can run tests locally with:
 pytest tests/
 ```
 
-All tests are also executed in the CI/CD pipeline.
+Note: All tests are also executed in the CI/CD pipeline.
 
 # Docker Services Summary
 
@@ -148,5 +149,3 @@ volumes:
 # Final Remarks
 
 This project aimed to implement a complete MLOps pipeline for credit default prediction using real-world tools and workflows. From data preprocessing and model training to model serving, testing, and continuous integration — all stages are automated and reproducible.
-
-It reflects industry best practices in data science and software engineering and is designed to be easily tested, extended, and maintained.
