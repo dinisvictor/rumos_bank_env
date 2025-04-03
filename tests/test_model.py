@@ -34,7 +34,7 @@ def scaler():
     """
     Load the scaler object used during training for consistent preprocessing.
     """
-    scaler_path = Path("rumos_bank/notebooks/mlflows/scaler.pkl")
+    scaler_path = Path("scaler.pkl")
     if not scaler_path.exists():
         raise FileNotFoundError("Scaler file 'scaler.pkl' not found!")
 
