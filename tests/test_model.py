@@ -35,14 +35,11 @@ def scaler():
     Load the scaler object used during training for consistent preprocessing.
     """
     scaler_path = Path("rumos_bank/notebooks/mlflows/scaler.pkl")
-    if scaler_path.exists():
-        scaler = joblib.load(scaler_path)
-        return scaler
-        print("Scaler loaded successfully!")
-    else:
-        print("Scaler file 'scaler.pkl' not found!")
+    if not scaler_path.exists():
+        raise FileNotFoundError("Scaler file 'scaler.pkl' not found!")
 
-    return scaler
+    print("Scaler loaded successfully!")
+    return joblib.load(scaler_path)
 
 
 def test_model_prediction_low_risk(model, scaler):
