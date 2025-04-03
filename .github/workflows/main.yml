@@ -145,7 +145,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Docker Buildx (for multi-platform builds if needed)
+      # Step 2: Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
@@ -157,18 +157,18 @@ jobs:
           username: dinisvictor
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 4: (Optional) Log in to Docker Hub 
+      # Step 4: (Optional) Log in to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: dinisvictor
-          password: dckr_pat_SlXFGzi2XKNkO-Q0tZiyY_0i8nQ
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Step 5: Run Docker Compose 
+      # Step 5: Run Docker Compose
       - name: Run Docker Compose
         run: docker compose up --build -d
 
-      # Step 6: Show container logs (debug)
+      # Step 6: Check container logs
       - name: Check container logs (debug)
         run: docker logs rumos-bank-lending-service || true
 
@@ -179,7 +179,7 @@ jobs:
         run: docker exec mlflow-tracking ls -l mlruns/models
 
       # Step 7: Wait for API to be ready
-      - name: Wait for API to be ready on localhost
+      - name: Wait for API on localhost:5002
         run: |
           echo "⏳ Waiting for API on localhost:5002..."
           for i in {1..30}; do
@@ -194,8 +194,8 @@ jobs:
           docker logs rumos-bank-lending-service || true
           exit 1
 
-      # Step 8: Show logs before tests (optional debug)
-      - name: Show service logs before tests
+      # Step 8: Show service logs
+      - name: Show logs before tests
         run: docker logs rumos-bank-lending-service
 
       # Step 9: Run service tests
@@ -208,20 +208,15 @@ jobs:
         run: |
           docker exec rumos-bank-lending-service conda run -n rumos_bank_env pytest tests/test_model.py
 
-      # Step 11: Tag and Push built images
-
-      - name: Tag service image for GitHub Container Registry
-        run: docker tag rumos_bank_service ghcr.io/dinisvictor/rumos_bank_service:latest
-
+     # Step 11: Push images to GitHub Container Registry
       - name: Push service image
         run: docker push ghcr.io/dinisvictor/rumos_bank_service:latest
-
-      - name: Tag UI image for GitHub Container Registry
-        run: docker tag rumos_bank_ui ghcr.io/dinisvictor/rumos_bank_ui:latest
 
       - name: Push UI image
         run: docker push ghcr.io/dinisvictor/rumos_bank_ui:latest
 
+
       # Step 12: Tear down containers
       - name: Stop Docker Containers
         run: docker compose down
+
