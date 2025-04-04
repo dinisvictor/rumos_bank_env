@@ -1,6 +1,9 @@
 # Use the official Python image as base
 FROM python:3.12
 
+# Add GitHub repository label for GHCR package linking
+LABEL org.opencontainers.image.source="https://github.com/dinisvictor/rumos_bank_env"
+
 # Set the working directory inside the container
 WORKDIR /app
 
