@@ -4,6 +4,9 @@ FROM ghcr.io/dinisvictor/mlruns:latest AS mlruns_data
 # Use the official Miniconda image as the base
 FROM continuumio/miniconda3
 
+# Add GitHub repository label for GHCR package linking
+LABEL org.opencontainers.image.source="https://github.com/dinisvictor/rumos_bank_env"
+
 # Set the working directory inside the container
 WORKDIR /app
 

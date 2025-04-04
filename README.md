@@ -146,6 +146,24 @@ volumes:
   mlruns_data:
 ```
 
-# Final Remarks
+# Final Considerations
+
+This project delivers a complete MLOps pipeline for credit default prediction, fully aligned with the course requirements:
+
+    All steps — from data analysis to deployment — are documented, automated, and reproducible.
+
+    The service is properly tested (model and API), containerized using Docker, and integrated into a CI/CD pipeline via GitHub Actions.
+
+    The best model is registered and versioned in the MLflow Model Registry with the champion tag.
+
+    Docker images are successfully pushed to the GitHub Container Registry (GHCR):
+
+        ghcr.io/dinisvictor/rumos_bank_service
+
+        ghcr.io/dinisvictor/rumos_bank_ui
+
+        ghcr.io/dinisvictor/mlruns
+
+Both the GitHub repository and the container packages are public, ensuring full access for evaluation without requiring credentials.
 
 This project aimed to implement a complete MLOps pipeline for credit default prediction using real-world tools and workflows. From data preprocessing and model training to model serving, testing, and continuous integration — all stages are automated and reproducible.
