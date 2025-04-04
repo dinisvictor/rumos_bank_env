@@ -150,20 +150,24 @@ volumes:
 
 This project delivers a complete MLOps pipeline for credit default prediction, fully aligned with the course requirements:
 
-    All steps — from data analysis to deployment — are documented, automated, and reproducible.
+All steps — from data analysis to deployment — are documented, automated, and reproducible using industry-standard tools such as MLflow, FastAPI, and Docker.
 
-    The service is properly tested (model and API), containerized using Docker, and integrated into a CI/CD pipeline via GitHub Actions.
+The service is thoroughly tested with unit and functional tests, covering both the machine learning model and the inference API, ensuring reliability and correctness.
 
-    The best model is registered and versioned in the MLflow Model Registry with the champion tag.
+The best-performing model is tracked and versioned in the MLflow Model Registry and is served using the champion tag for easy access and consistent deployment.
 
-    Docker images are successfully pushed to the GitHub Container Registry (GHCR):
+The entire system is containerised using Docker and orchestrated via Docker Compose, allowing it to be launched with a single command in any environment.
 
-        ghcr.io/dinisvictor/rumos_bank_service
+A CI/CD pipeline built with GitHub Actions automates the entire lifecycle: building images, running tests, deploying the service, and publishing the artifacts.
 
-        ghcr.io/dinisvictor/rumos_bank_ui
+Docker images are successfully built and pushed to the GitHub Container Registry (GHCR):
 
-        ghcr.io/dinisvictor/mlruns
+```bash
+    ghcr.io/dinisvictor/rumos_bank_service
+    ghcr.io/dinisvictor/rumos_bank_ui
+    ghcr.io/dinisvictor/mlruns 
+```
 
-Both the GitHub repository and the container packages are public, ensuring full access for evaluation without requiring credentials.
+All components are public: both the GitHub repository and the associated container packages, ensuring that the entire project can be evaluated and reproduced without requiring any authentication or access credentials.
 
-This project aimed to implement a complete MLOps pipeline for credit default prediction using real-world tools and workflows. From data preprocessing and model training to model serving, testing, and continuous integration — all stages are automated and reproducible.
+This project demonstrates a robust, end-to-end MLOps solution and adheres to best practices in data science, software development, and cloud-native deployment.
