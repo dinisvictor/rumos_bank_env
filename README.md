@@ -1,6 +1,7 @@
 # Rumos Bank
 
-This project was developed to support Rumos Bank in predicting the probability of customers defaulting on their credit obligations. The solution involves a full machine learning pipeline – from training and experiment tracking to deployment and testing – using modern MLOps tools and practices.
+This project was developed as part of my evaluation for the **Machine Learning Operationalization module**. My goal was to design and implement a full MLOps pipeline to support **Rumos Bank** in predicting the likelihood of customers defaulting on their credit obligations.
+I built this solution from end to end — from data analysis and model experimentation to production deployment and testing — using tools and best practices in MLOps.
 
 ---
 
@@ -20,15 +21,47 @@ This project was developed to support Rumos Bank in predicting the probability o
 
 The notebook `notebooks/rumos_bank_lending_prediction.ipynb` includes:
 
-- Data exploration and preprocessing  
+- Data exploration, visualization, and cleaning
 - Feature engineering and scaling  
-- Training and comparison of models (e.g., Logistic Regression, Random Forest)  
-- Logging experiments with MLflow  
-- Registering the best model in MLflow under the tag:  
+- Training and comparison of models:
+  - Logistic Regression
+  - KNN Classifier
+  - Decision Tree
+  - Random Forest
+  - SVC
+  - MLP Classifier
+- Tracking and comparing experiments using **MLflow**  
+- Registering the top-performing model (`random_forest`) in MLflow under the alias:  
   ```bash
   models:/random_forest@champion
 
-# Running Locally (Optional)
+  ---
+
+# Testing
+
+I implemented two levels of testing using Pytest:
+
+A. Model Tests (in **tests/test_model.py**)
+
+- Validates predictions for both low-risk and high-risk profiles
+- Ensures output shape and valid probability values
+
+B. Service Tests (in **tests/test_service.py**)
+
+- Sends test requests to /predict_default endpoint
+- Checks for status codes, valid structure, and input validation
+
+Tests can be run locally using:
+
+```bash
+pytest tests/
+```
+
+All tests also run automatically in the GitHub Actions pipeline. 
+
+---
+
+# Running the Project Locally
 
 ## 1. Create the Conda environment
 ```bash 
@@ -48,6 +81,7 @@ docker compose up --build
 - **MLflow Tracking UI:** http://127.0.0.1:5001  
 - **HTML form UI:** http://127.0.0.1:5003  
 
+---
 
 # CI/CD Pipeline (GitHub Actions)
 
@@ -62,9 +96,9 @@ The pipeline is defined in **.github/workflows/main.yml.** It executes the follo
 5.	Pushes Docker images to GitHub Container Registry (GHCR)
 6.	Shuts down all running containers
 
-## Secrets Configuration
+## Secrets Setup
 
-To allow the pipeline to push to GHCR, you need to:
+To enable image pushes to GHCR:
 
 A. Create a Personal Access Token (PAT)
 
@@ -74,18 +108,18 @@ A. Create a Personal Access Token (PAT)
 
   - write:packages
   - read:packages
-  - delete:packages (optional)
+  - delete:packages
 
 3. Add the token as a secret
 
-In the repository:
+B. In the repository:
 
 4. Go to Settings > Secrets and variables > Actions
 
 5. Click New repository secret
 
    - Name: GHCR_PAT
-   - Value: paste the PAT you created
+   - Value: paste the PAT created
 
 This token will be used in the pipeline step:
 
@@ -97,27 +131,8 @@ This token will be used in the pipeline step:
     username: ${{ github.actor }}
     password: ${{ secrets.GHCR_PAT }}
 ```
-# Testing
 
-Unit and integration tests are written using Pytest.
-
-A. Model Tests (in **tests/test_model.py**)
-
-- Validates predictions for low-risk and high-risk profiles
-- Ensures output shape and valid probability values
-
-B. Service Tests (in **tests/test_service.py**)
-
-- Tests POST requests to the /predict_default endpoin
-- Checks for correct response structure and status codes
-
-You can run tests locally with:
-
-```bash
-pytest tests/
-```
-
-Note: All tests are also executed in the CI/CD pipeline.
+---
 
 # Docker Services Summary
 
@@ -146,19 +161,22 @@ volumes:
   mlruns_data:
 ```
 
+---
+
 # Final Considerations
 
-This project delivers a complete MLOps pipeline for credit default prediction, fully aligned with the course requirements:
+As a data analyst in training, this project was an great opportunity for me to go beyond my knowledge and try to build probably my first pipeline (long journey).
+This project delivers a complete MLOps pipeline for credit default prediction, aligned with the requirements:
 
-All steps — from data analysis to deployment — are documented, automated, and reproducible using industry-standard tools such as MLflow, FastAPI, and Docker.
+- Track experiments reproducibly with MLflow
 
-The service is thoroughly tested with unit and functional tests, covering both the machine learning model and the inference API, ensuring reliability and correctness.
+- Deploy models with a real-world API using FastAPI
 
-The best-performing model is tracked and versioned in the MLflow Model Registry and is served using the champion tag for easy access and consistent deployment.
+- Test ML applications for both functionality and reliability
 
-The entire system is containerised using Docker and orchestrated via Docker Compose, allowing it to be launched with a single command in any environment.
+- Use Docker for production-ready packaging.
 
-A CI/CD pipeline built with GitHub Actions automates the entire lifecycle: building images, running tests, deploying the service, and publishing the artifacts.
+- Automate everything through GitHub Actions
 
 Docker images are successfully built and pushed to the GitHub Container Registry (GHCR):
 
@@ -168,6 +186,6 @@ Docker images are successfully built and pushed to the GitHub Container Registry
     ghcr.io/dinisvictor/mlruns 
 ```
 
-All components are public: both the GitHub repository and the associated container packages, ensuring that the entire project can be evaluated and reproduced without requiring any authentication or access credentials.
+All components are public: both the GitHub repository and the containeres packages.
 
-This project demonstrates a robust, end-to-end MLOps solution and adheres to best practices in data science, software development, and cloud-native deployment.
+This project helped me understand the full lifecycle of a machine learning solution, from exploration to deployment — all following industry-standard tools and workflows.
