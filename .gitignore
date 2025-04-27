@@ -1,5 +1,5 @@
-# Ignorar ficheiros do macOS
+# Ignore macOS files
 .DS_Store
 
-# Ignorar ficheiros de cache dos testes
+# Ignore test cache files
 tests/__pycache__/

@@ -1,7 +1,7 @@
 # Rumos Bank
 
-This project was developed as part of my evaluation for the **Machine Learning Operationalization module**. My goal was to design and implement a full MLOps pipeline to support **Rumos Bank** in predicting the likelihood of customers defaulting on their credit obligations.
-I built this solution from end to end — from data analysis and model experimentation to production deployment and testing — using tools and best practices in MLOps.
+This project was developed as part of my evaluation for the **Machine Learning Operationalization module**. The goal was to design and implement a full MLOps pipeline to support **Rumos Bank** in predicting the likelihood of customers defaulting on their credit obligations.
+I built this solution from end to end — from data analysis and model experimentation to production deployment and testing — using tools and best practices in from the classes.
 
 ---
 
@@ -19,7 +19,7 @@ I built this solution from end to end — from data analysis and model experimen
 
 # Data Analysis and Model Training
 
-The notebook `notebooks/rumos_bank_lending_prediction.ipynb` includes:
+The notebook `notebooks/mlflows/model_registry.ipynb` includes:
 
 - Data exploration, visualization, and cleaning
 - Feature engineering and scaling  
@@ -34,6 +34,8 @@ The notebook `notebooks/rumos_bank_lending_prediction.ipynb` includes:
 - Registering the top-performing model (`random_forest`) in MLflow under the alias:  
   ```bash
   models:/random_forest@champion
+
+The models are saved in a image (Dockerfile.mlruns).
 
   ---
 
@@ -162,13 +164,16 @@ volumes:
 ```
 
 ---
+
 # Packages
 
 Please go to the packages section in GitHub to see all the images.
 
+---
+
 # Final Considerations
 
-As a data analyst in training, this project was an great opportunity for me to go beyond my knowledge and try to build probably my first pipeline (long journey).
+As a data analyst in training, this project was an great opportunity for me to go beyond my knowledge and try to build probably my first pipeline. I must say it was a long journey and not an easy one. 
 This project delivers a complete MLOps pipeline for credit default prediction, aligned with the requirements:
 
 - Track experiments reproducibly with MLflow

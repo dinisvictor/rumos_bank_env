@@ -20,7 +20,7 @@ jobs:
         platform: [linux/arm64]
 
     steps:
-      # Suporte multiplataforma (arm64)
+      # Multiplatform support (arm64)
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
