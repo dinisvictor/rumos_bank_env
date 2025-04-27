@@ -162,6 +162,9 @@ volumes:
 ```
 
 ---
+# Packages
+
+Please go to the packages section in GitHub to see all the images.
 
 # Final Considerations
 
